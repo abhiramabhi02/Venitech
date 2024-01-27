@@ -1,0 +1,61 @@
+<div class="container">
+    <div class="form-container">
+        <form (ngSubmit)="submitForm()" #userForm="ngForm">
+          <label class="form-label"  for="name">Name:</label>
+          <input class="form-control input-cntrl" type="text" id="name" name="name" placeholder="Please enter your name" [(ngModel)]="user.Name" required>
+      
+          <label class="form-label" for="address">Address:</label>
+          <input class="form-control input-cntrl" type="text" id="address" name="address" placeholder="Please enter your address" [(ngModel)]="user.Address" required>
+      
+          <label class="form-label" for="email">Email:</label>
+          <input class="form-control input-cntrl" type="email" id="email" name="email" placeholder="Please enter your email" [(ngModel)]="user.Email" required pattern="{{ emailPattern.source }}">
+          <div class="error-message" *ngIf="userForm.controls['email']?.hasError('pattern') && userForm.controls['email']?.touched">
+            Invalid email format
+          </div>
+      
+          <label class="form-label" for="mobile">Mobile:</label>
+          <input class="form-control input-cntrl" type="tel" id="mobile" name="mobile" placeholder="Please enter your number" [(ngModel)]="user.Mobile" required pattern="{{ mobilePattern.source }}">
+          <div class="error-message" *ngIf="userForm.controls['mobile']?.hasError('pattern') && userForm.controls['mobile']?.touched">
+            Invalid mobile number format
+          </div>
+      
+          <label class="form-label" for="gender">Gender:</label>
+          <select class="form-control input-cntrl" id="gender" name="gender" [(ngModel)]="user.Gender" required>
+              <option value="" selected disabled>Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+          </select>
+          
+          <button type="submit" [disabled]="userForm.invalid">Submit</button>
+        </form>
+      </div>
+</div>
+
+<div class="container">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Gender</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let entry of entries">
+                    <td>{{entry.Name}}</td>
+                    <td>{{entry.Address}}</td>
+                    <td>{{entry.Email}}</td>
+                    <td>{{entry.Mobile}}</td>
+                    <td>{{entry.Gender}}</td>
+                    <td>
+                        <button (click)="editEntry(entry)"><i class="fa-solid fa-pen-to-square"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>  
