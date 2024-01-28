@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, DoCheck, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  DoCheck,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ServicesService } from '../services.service';
 
@@ -16,9 +23,8 @@ interface User {
   styleUrls: ['./data-form.component.scss'],
 })
 export class DataFormComponent implements OnInit {
-
-  user: User = {Name: '', Address: '', Email: '', Mobile: '', Gender: ''}
-  entries: User[] = []
+  user: User = { Name: '', Address: '', Email: '', Mobile: '', Gender: '' };
+  entries: User[] = [];
   editingEntry: User | null = null;
   userForm!: NgForm;
 
@@ -26,69 +32,61 @@ export class DataFormComponent implements OnInit {
   emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   mobilePattern = /^[0-9]{10}$/;
 
-  constructor(private dataService:ServicesService){}
+  constructor(private dataService: ServicesService) {}
 
   ngOnInit(): void {
-   
-    this.getData()
+    this.getData();
   }
 
- 
- 
-
-  getData(){
-    this.dataService.getData().subscribe((response:any)=>{
-      if(response.success){
+  // this is the function to retrieve the data from the database
+  getData() {
+    this.dataService.getData().subscribe((response: any) => {
+      if (response.success) {
         console.log(response);
-        this.entries = response.user
+        this.entries = response.user;
         console.log(this.entries, 'entry');
-        
       }
-      
-    })
+    });
   }
 
+  //submiting the form for both while adding new data and editing the existing data
   submitForm() {
     if (this.editingEntry) {
       console.log(this.user, 'user');
-      
-      // If editing, call editData from the service
+
       this.dataService.editData(this.user).subscribe(
-        response => {
-          // Handle the response from the backend if needed
+        (response) => {
           console.log('Edit Response:', response);
-          this.entries = this.entries.map(entry => (entry === this.editingEntry ? this.user : entry));
+          this.entries = this.entries.map((entry) =>
+            entry === this.editingEntry ? this.user : entry
+          );
           this.editingEntry = null;
-          this.getData()
+          this.getData();
         },
-        error => {
-          // Handle error from the backend
+        (error) => {
           console.error('Edit Error:', error);
         }
       );
     } else {
       console.log(this.user);
-      
-      // If adding new data, call addData from the service
+
       this.dataService.addData(this.user).subscribe(
-        response => {
-          // Handle the response from the backend if needed
+        (response) => {
           console.log('Add Response:', response);
           this.entries.push({ ...this.user });
         },
-        error => {
-          // Handle error from the backend
+        (error) => {
           console.error('Add Error:', error);
         }
       );
     }
-    this.getData()
-    this.user = {Name: '', Address: '', Email: '', Mobile: '', Gender: '' };
+    this.getData();
+    this.user = { Name: '', Address: '', Email: '', Mobile: '', Gender: '' };
   }
-  
 
-  editEntry(entry: User){
-    this.user = {...entry}
-    this.editingEntry = entry
+  //make the form contains with the existing data for edit
+  editEntry(entry: User) {
+    this.user = { ...entry };
+    this.editingEntry = entry;
   }
 }
